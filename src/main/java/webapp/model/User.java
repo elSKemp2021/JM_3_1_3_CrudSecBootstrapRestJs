@@ -4,8 +4,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import webapp.dao.RoleDao;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Set;
@@ -48,18 +50,18 @@ public class User implements UserDetails {
     private Set<Role> roles;
 
     @Transient
-    private boolean flagAdmin = false;
-
-    @Transient
-    private boolean flagUser = false;
+    @Autowired
+    private RoleDao roleDao;
 
     public User() {
     }
 
     public User(String name,
                 String lastName,
-                int age, String email,
-                String username, String password,
+                int age,
+                String email,
+                String username,
+                String password,
                 Set<Role> roles) {
         this.name = name;
         this.lastname = lastName;
@@ -70,6 +72,13 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
+    public String getRoleString() {
+        StringBuilder stringRole = new StringBuilder();
+        for(Role role : roles) {
+            stringRole.append(role.getName().substring(5)).append(" ");
+        }
+        return stringRole.toString();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

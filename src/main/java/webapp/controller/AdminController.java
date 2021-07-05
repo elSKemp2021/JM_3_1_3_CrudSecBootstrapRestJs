@@ -4,14 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import webapp.model.Role;
 import webapp.model.User;
+import webapp.service.RoleService;
 import webapp.service.UserService;
-
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.transaction.Transactional;
-import java.util.HashSet;
-import java.util.Set;
+import java.security.Principal;
 
 @Controller
 @RequestMapping("/admin")
@@ -19,66 +16,42 @@ import java.util.Set;
 public class AdminController {
 
     private  UserService userService;
+    private RoleService roleService;
 
     @Autowired
-    public AdminController(UserService userService) {
+    public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @GetMapping()
-    public String getAllUsers(Model model) {
+    public String getAllUsers(Model model, Principal principal) {
+        model.addAttribute("activeUser", userService.getUserByUsername(principal.getName()));
         model.addAttribute("users", userService.getAllUsers());
-        return "admin/users";
+        model.addAttribute("roles", roleService.getAllRoles());
+        return "admin/admin";
     }
 
-    @GetMapping("/adduser")
-    public String addUser(Model model) {
-        model.addAttribute("user", new User());
-        return "admin/adduser";
-    }
-
-    @PostMapping()
+    @PostMapping("/adduser")
     public String saveUser(@ModelAttribute("user") User user,
-                           @RequestParam(required = false, name = "ROLE_ADMIN") String ROLE_ADMIN,
-                           @RequestParam(required = false, name = "ROLE_USER") String ROLE_USER) {
+                           @RequestParam(value = "roles_string") String[] roles) {
 
-        Set<Role> roles  = new HashSet<>();
-
-        if (ROLE_ADMIN != null) {
-            roles.add(new Role(1L, ROLE_ADMIN));
+        if (roles != null) {
+            user.setRoles(roleService.getRoleByName(roles));
         }
-        if (ROLE_USER != null) {
-            roles.add(new Role(2L, ROLE_USER));
-        }
-
-        user.setRoles(roles);
         userService.addUser(user);
         return "redirect:/admin";
     }
 
-    @GetMapping("/{id}/edituser")
-    public String editUser(Model model,
-                           @PathVariable("id") long id) {
-        model.addAttribute("user", userService.getUser(id));
-        return "admin/edituser";
-    }
-
     @PatchMapping("/{id}")
     public String editUser(@ModelAttribute("user") User user,
-                           @RequestParam(required = false, name = "ROLE_ADMIN") String ROLE_ADMIN,
-                           @RequestParam(required = false, name = "ROLE_USER") String ROLE_USER) {
-
-        Set<Role> roles  = new HashSet<>();
-
-        if (ROLE_ADMIN != null) {
-            roles.add(new Role(1L, ROLE_ADMIN));
+                           @RequestParam(name = "roles_string", required = false) String[] roles) {
+        System.out.println("ЗАЙТИ");
+        if (roles != null) {
+            user.setRoles(roleService.getRoleByName(roles));
         }
-        if (ROLE_USER != null) {
-            roles.add(new Role(2L, ROLE_USER));
-        }
-
-        user.setRoles(roles);
         userService.editUser(user);
+        System.out.println("Выйти");
         return "redirect:/admin";
     }
 

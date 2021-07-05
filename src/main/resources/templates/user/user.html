@@ -1,65 +1,63 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Profile user</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
-<style type="text/css">
-    body {
-        font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
-        font-size: 15px;
-        text-align: center;
-    }
-    table {
-        border-collapse: collapse;
-        margin: auto;
-    }
-    caption {
-        font-size: 18px;
-    }
-    th {
-        background: #AFCDE7;
-        color: white;
-        padding: 10px 20px;
-    }
-    th, td {
-        border-style: solid;
-        border-color: white;
-        border-radius:5px;
-        box-shadow: 0px 0px 4px 2px #a0b;
-    }
-    td {
-        padding: 5px 10px;
-        background: #D8E6F3;
-    }
-</style>
+
 <body>
-<table border="2">
-    <caption>USER INFORMATION</caption>
-    <tr>
-        <th>id</th>
-        <th>name</th>
-        <th>lastname</th>
-        <th>age</th>
-        <th>email</th>
-        <th>username</th>
-        <th>password</th>
-        <th>Edit user</th>
-    </tr>
-        <tr>
-            <td th:text="${user.id}"/>
-            <td th:text="${user.name}"/>
-            <td th:text="${user.lastname}"/>
-            <td th:text="${user.age}"/>
-            <td th:text="${user.email}"/>
-            <td th:text="${user.username}"/>
-            <td th:text="${user.password}"/>
-            <td>
-                <a th:href="@{/user/{id}/edituser(id=${user.getId()})}">Edit</a>
-            </td>
-        </tr>
-</table>
-<br/>
-<a href="/logout">LOGOUT PROFILE </a>
+<!-- Навигация-->
+<nav class="navbar bg-dark justify-content-between" style="margin-bottom: 20px">
+  <p class="navbar-brand text-white">
+    <b><span th:text="${user.getEmail()}"></span></b> with roles:
+    <span th:text="${user.getRoleString()}"></span>
+  </p>
+  <a class="nav-link text-white-50" href="/logout">Logout</a>
+</nav>
+<!-- Основной блок -->
+<div class="container-fluid text-center row content h-100 ">
+  <!-- Сайдбар -->
+  <div class="list-group col-sm-2 sidenav" id="list-tab" role="tablist">
+    <a class="list-group-item list-group-item-action active" id="list-user" data-toggle="list" href="#USER" role="tab">User</a>
+  </div>
+  <div class="col-sm-10 text-left tab-content" id="nav-tabContent">
+    <!-- Таблица пользователей -->
+    <div class="tab-pane fade show active tab-content" id="USER" role="tabpanel">
+      <h1 >User information-page</h1>
+      <div class="border bg-light">
+        <h3 style="text-align: left; margin: 1%">All Users</h3>
+      </div>
+      <div style="margin:1%">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Last Name</th>
+            <th>Age</th>
+            <th>Email</th>
+            <th>Username</th>
+            <th>Role</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td th:text="${user.getId()}"></td>
+            <td th:text="${user.getName()}"></td>
+            <td th:text="${user.getLastname()}"></td>
+            <td th:text="${user.getAge()}"></td>
+            <td th:text="${user.getEmail()}"></td>
+            <td th:text="${user.getUsername()}"></td>
+            <td th:text="${user.getRoleString()}"></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script></body>
 </body>
 </html>
